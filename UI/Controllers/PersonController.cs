@@ -64,19 +64,18 @@ namespace UI.Controllers
    
 
         [HttpPost]
-        public ActionResult Create(Person viewModel)
+        public ActionResult Create(Person person)
         {
-            var per = new Person();
-            if (ModelState.IsValid || true)
+          
+            if (person != null )
             {
-               
-              
-                _context.Persons.Add(viewModel);
-                _context.SaveChanges();
+
+                _personRepo.InsertPerson(person);
+             
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(viewModel);
+            return View(person);
         }
         // POST: person/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -86,56 +85,43 @@ namespace UI.Controllers
         public async Task<IActionResult> Created([Bind("Id,FirstName,LastName,Phones")] Person person)
         {
 
-            var proj = new Person();
-           
-           
-            if (ModelState.IsValid || true)
+
+
+            if (person != null)
             {
-             //   person.Phones = person.Phones.Select(phone => new Phone { PhoneNumber = phone.PhoneNumber }).ToList();
+                //   person.Phones = person.Phones.Select(phone => new Phone { PhoneNumber = phone.PhoneNumber }).ToList();
 
-                
-                if (ModelState.IsValid || true)
-                {
-                    proj.LastName = person.LastName;
 
-                    proj.FirstName = person.FirstName;
+ _personRepo.InsertPerson(person);
 
-                    proj.Phones = new List<Phone>();
 
-                    foreach (var t in proj.Phones)
-                    {
-                        proj.Phones.Add(new Phone()
-                        {
-                            PhoneNumber = t.PhoneNumber,
-                            Type = t.Type
-                        });
-                    }
 
-                  
-                }
-                _context.Add(proj);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(person);
+
             }
-            return View(person);
+                
+             
+                return RedirectToAction(nameof(Index));
+            
+           
         }
 
         // GET: person/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Persons == null)
+            if (id == null )
             {
                 return NotFound();
             }
           
-            var person = await _context.Persons.FindAsync(id);
-
+          
+            var person = _personRepo.getuserid((int)id);
             if (person == null)
             {
                 return NotFound();
             }
-           person =_context.Persons
-          .Include(p => p.Phones).First(t => t.Id == person.Id);
+
+            
             return View(person);
         }
 
@@ -151,8 +137,9 @@ namespace UI.Controllers
             {
                 try
                 {
-                    _context.Update(person);
-                    await _context.SaveChangesAsync();
+                    _personRepo.EditUser(person);
+                    //_context.Update(person);
+                  //  await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

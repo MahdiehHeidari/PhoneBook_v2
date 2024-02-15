@@ -18,14 +18,14 @@ namespace BLL
 
         public List<Person> GetUser()
         {
-            var q = db.personrepository.GetByList();
-            return q;
+           
+            return db.personrepository.GetByList();
         }
 
         public Person getuserid(int id)
         {
-            var q = db.personrepository.GetById(id);
-            return q;
+           
+            return db.personrepository.GetById(id); ;
         }
 
         public int InsertPerson(Person p)
@@ -43,7 +43,13 @@ namespace BLL
 
         }
 
-      
+        public void EditUser(Person p)
+        {
+        
+          db.personrepository.UpdateById(p,true);
+        }
+        
+
     }
 }
 
