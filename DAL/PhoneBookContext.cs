@@ -40,14 +40,14 @@ public class bloggingCnotextFactory : IDesignTimeDbContextFactory<PhoneBookConte
     {
        
        //IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
-        var opionsBuilder = new DbContextOptionsBuilder<PhoneBookContext>();
+        var opionBuilder = new DbContextOptionsBuilder<PhoneBookContext>();
 
-      //  var connString = configuration.GetConnectionString("DefaultConnection");
-       // opionsBuilder.UseSqlServer(@"");
-        opionsBuilder.UseSqlServer(@"Server=localhost;Database=PhoneBook;User Id=sa;Password=Docker@123;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=True"
+        //  var connString = configuration.GetConnectionString("DefaultConnection");
+        // opionsBuilder.UseSqlServer(@"");
+        opionBuilder.UseSqlServer(@"Server=localhost;Database=PhoneBook;User Id=sa;Password=Docker@123;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=True"
 );
         
-        return new PhoneBookContext(opionsBuilder.Options);
+        return new PhoneBookContext(opionBuilder.Options);
     }
 
 }

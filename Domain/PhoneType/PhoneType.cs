@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Domain
 {
-    public enum PhoneType
+    public enum PhoneType:int
     {
         Home=1,
         Work=2,
