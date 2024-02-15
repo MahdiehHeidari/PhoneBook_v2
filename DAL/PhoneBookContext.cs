@@ -29,6 +29,8 @@ public class PhoneBookContext : DbContext
           v => (PhoneType)v // Convert int to enum
       );
 
+        modelBuilder.Entity<Person>().Navigation(e => e.Phones).AutoInclude();
+
 
 
     }

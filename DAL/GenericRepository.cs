@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace DAL
 {
@@ -31,6 +35,7 @@ namespace DAL
             /// <returns></returns>
             public virtual List<TEntity> GetByList()
             {
+
                 return dbset.ToList();
             }
 
@@ -151,7 +156,8 @@ namespace DAL
                     context.SaveChanges();
                 }
             }
-        }
+
+    }
     }
 
 
