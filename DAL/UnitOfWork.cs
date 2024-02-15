@@ -6,9 +6,9 @@ namespace DAL
     public class UnitOfWork : IDisposable
     {
         PhoneBookContext context = null;
-        public UnitOfWork()
+        public UnitOfWork(PhoneBookContext _contex)
         {
-            context = new PhoneBookContext();
+            context = _contex;
         }
 
 

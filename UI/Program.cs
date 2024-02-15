@@ -1,7 +1,16 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using DAL;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//db
+//add dbcontex
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<PhoneBookContext>(x => x.UseSqlServer(connectionString));
+
 
 var app = builder.Build();
 
