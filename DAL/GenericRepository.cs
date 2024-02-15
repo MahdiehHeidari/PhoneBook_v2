@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using DAL.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
@@ -14,17 +15,18 @@ namespace DAL
             internal DbSet<TEntity> dbset;
             public GenericRepository(PhoneBookContext context)
             {
-                this.context = context;
-          
-                this.dbset = context.Set<TEntity>();
-            }
+                this.context = new PhoneBookContext(PhoneBookContext.ops.dbOptions);
 
-            /// <summary>
-            /// بازگرداندن اطلاعات با شناسه مشخص
-            /// </summary>
-            /// <param name="id">کلید اصلی</param>
-            /// <returns></returns>
-            public virtual TEntity GetById(object id)
+            this.dbset = context.Set<TEntity>();
+            }
+        
+
+        /// <summary>
+        /// بازگرداندن اطلاعات با شناسه مشخص
+        /// </summary>
+        /// <param name="id">کلید اصلی</param>
+        /// <returns></returns>
+        public virtual TEntity GetById(object id)
             {
                 return dbset.Find(id);
             }

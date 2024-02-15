@@ -1,0 +1,107 @@
+﻿@model List<Domain.Phone>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+    <title>Index</title>
+</head>
+<body>
+    <div class="container">
+
+        <p>
+            @{
+                int pId = @Model.FirstOrDefault().PersonId; ;
+            }
+
+
+        </p>
+
+        <table class="table-fill">
+            <thead>
+                <tr>
+                    <td colspan="4">
+                        <center>
+                            <b>Phones</b>
+
+                        </center>
+
+                    </td>
+                </tr>
+                <tr>
+
+                    <th>
+                        PhoneNumber
+
+                    </th>
+                    <th>
+                        Type
+
+                    </th>
+                    <th style="display:none;">
+                        Person.Id
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+
+                    <th colspan="4">
+                        <div class="form-group">
+
+                            <div class="col-md-4">
+                                <a href="/person/Index" class="btn btn-primary">Back to PhoneBook</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="/Person/Edit?id=@pId" class="btn btn-primary" >Back to Edit</a>
+
+                          </div>
+                            <div class="col-md-4">
+                                <a asp-action="Create" asp-route-id="@pId" class="btn btn-primary">Add new Phone</a>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td style="display:none;">
+                            @Html.DisplayFor(modelItem => item.Person.Id)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                         
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+     
+
+        </table>
+     
+    
+    </div>
+      
+
+</body>
+</html>

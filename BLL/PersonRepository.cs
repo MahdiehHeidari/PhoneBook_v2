@@ -5,14 +5,14 @@ using Domain;
 
 namespace BLL
 {
+	public class PersonRepository
+	{
 
-    public class PhoneRepository
-    {
         private UnitOfWork db;
-     
-        public PhoneRepository()
+        PhoneBookContext _contex;
+        public PersonRepository()
         {
-           
+            
             db = new UnitOfWork();
         }
 
@@ -22,18 +22,16 @@ namespace BLL
             return q;
         }
 
-        public int InsertPhone()
+        public Person getuserid(int id)
         {
-            Person b = new Person();
-            PersonRepository pr = new PersonRepository();
-            b = pr.GetUser().FirstOrDefault();
-            Phone p = new Phone();
-            p.Person = b;
-            p.PhoneNumber = "09137232814";
-            p.Type = PhoneType.Work;
-            p.PersonId = b.Id;
-            db.phonerepository.Insert(p);
-         
+            var q = db.personrepository.GetById(id);
+            return q;
+        }
+
+        public int InsertPerson(Person p)
+        {
+            
+            db.personrepository.Insert(p);
             if (db.save() > 0)
             {
                 return 1;
@@ -45,7 +43,7 @@ namespace BLL
 
         }
 
-
+      
     }
 }
 

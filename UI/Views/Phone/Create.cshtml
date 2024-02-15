@@ -1,0 +1,131 @@
+@model Domain.Phone
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../wwwroots/css/site.css">
+    <title>Create</title>
+</head>
+<body>
+
+    <h4>New Phone</h4>
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-controller="Phone" asp-action="Create" method="post" class="well form-horizontal">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Type" class="control-label"></label>
+                            <select asp-for="Type" class="form-control" required>
+                                
+                                <option selected disabled value="">Please select your PhoneType</option>
+
+                                <option>Home</option>
+                                <option>Mobile</option>
+                                <option>Work</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="PersonId" value="@ViewData["PersonId"]" class="form-control" readonly />
+                        </div>
+             
+
+                        <div class="form-group">
+                           
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <button type="button" onclick="validateAndSave()" class="btn btn-primary">ذخیره</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+        <div>
+
+            <a asp-action="PhonesWithPersonId" asp-route-id=" @ViewData["PersonId"]">Back to List</a>
+        </div>
+    <script>
+        function validateAndSave() {
+            clearErrorMessages();
+            
+            var accepted = true;
+            var PhoneNumberInput = document.querySelector('input[name="PhoneNumber"]');
+       
+            var TypeInput = document.querySelector('select[name="Type"]');
+            var typeSelects = document.querySelectorAll('select[name="Type"]');
+           
+            var PhoneNumber = PhoneNumberInput.value;
+            var type = typeSelects[0].value;
+           
+            if (PhoneNumber === '' ) {
+                accepted = false;
+                displayErrorMessage(PhoneNumberInput, 'شماره تلفن نمیتواند خالی باشد ');
+                
+                return; // Stop further processing
+            }
+        
+            if (type === null || type === '' ) {
+
+              
+                displayErrorMessage(TypeInput, 'نوع تلفن نمیتواند خالی باشد ');
+              
+                accepted = false;
+                return; // Stop further processing
+            }
+          
+            
+            var regexMobile = new RegExp("^(\\+98|0)?9\\d{9}$");
+            var regexHome = new RegExp("^0[0-9]{2}[0-9]{8}$");
+
+            if (!regexHome.test(PhoneNumber)) {
+                accepted = false;
+                displayErrorMessage(PhoneNumberInput,'فرمت شماره تلفن صحیح نمیباشد');
+               
+                return; // Stop further processing
+            }
+            
+          
+            if (accepted) {
+                document.querySelector('form').submit();
+            }
+        }
+        function displayErrorMessage(element, errorMessage) {
+            
+            // Create and insert an error message element below the specified element
+            var errorMessageElement = document.createElement('span');
+            errorMessageElement.classList.add('text-danger');
+            errorMessageElement.style.display = 'block'; // Make it a block element
+            errorMessageElement.innerText = errorMessage;
+
+            // Insert the error message below the specified element
+            element.parentNode.appendChild(errorMessageElement);
+        }
+        function clearErrorMessages() {
+            // Remove all existing error messages
+            var existingErrorMessages = document.querySelectorAll('.text-danger');
+            existingErrorMessages.forEach(function (element) {
+                element.remove();
+            });
+        }
+
+    </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using BLL;
 using DAL;
+using DAL.DataContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UI.Models;
@@ -17,13 +18,13 @@ public class HomeController : Controller
     public HomeController(ILogger<HomeController> logger, PhoneBookContext context)
     {
         _context = context;
-        _p = new BLL.PhoneRepository(_context);
+        _p = new BLL.PhoneRepository();
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        var q = _p.InsertPhone();
+       // var q = _p.InsertPhone();
         return View();
     }
 

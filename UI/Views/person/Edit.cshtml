@@ -1,0 +1,231 @@
+@model Domain.Person
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="~/css/site.css">
+    <title>Edit</title>
+</head>
+<body>
+
+
+    <hr />
+
+    <div class="container">
+
+       
+            <form asp-controller="person" asp-action="Edit" method="post" class="well form-horizontal">
+
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+
+                <fieldset>
+
+                    <!-- Form Name -->
+                    <legend>Details</legend>
+
+                    <!-- Name-->
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">First Name</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LastName-->
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Last Name</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phones-->
+                    <div class="form-group">
+
+
+
+                        <label class="col-md-4 control-label">Phones</label>
+                        @{
+                            int counter = 0;
+                        }
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="input-group">
+
+                                @foreach (var item in Model.Phones)
+                                {
+
+
+                                    <div class="parent">
+                                        <label asp-for="@item.PhoneNumber" class="control-label" style="padding:5px"> </label>
+
+                                        <input id="inputField" asp-for="@item.PhoneNumber" class="form-control" readonly />
+                                        <span asp-validation-for="@item.PhoneNumber" class="text-danger"></span>
+                                        @if (@item.Type == Domain.PhoneType.Home)
+                                        {
+
+                                            <i class="material-icons" style="padding:5px"> <span class="glyphicon glyphicon-home"></span></i>
+
+
+                                        }
+                                        else if (@item.Type == Domain.PhoneType.Work)
+                                        {
+                                            <i class="material-icons" style="padding:5px"> <span class="glyphicon glyphicon-briefcase"></span></i>
+
+                                        }
+                                        else if (@item.Type == Domain.PhoneType.Mobile)
+                                        {
+                                            <i class="material-icons" style="padding:5px"> <span class="glyphicon glyphicon glyphicon-phone"></span></i>
+
+
+                                        }
+                                    </div>
+
+
+                                    <br />
+                                    counter++;
+                                }
+
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                    <!-- Text input-->
+
+                    <div class="form-group  " style="display: flex;  justify-content: center;  align-items: center;">
+
+                        <div class="col-md-4 inputGroupContainer" style="display: flex;  justify-content: center;  align-items: center;">
+
+                            <div class="col-md-4">
+
+                                <a href="/Phone/PhonesWithPersonId?id=@Model.Id" class="btn btn-warning">Edit Phones</a>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Text input-->
+                    <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label"></label>
+                        <div class="col-md-4">
+                            <button type="button" onclick="validateAndSave()">ذخیره</button>
+                            <div class="col-md-4">
+                                <button asp-action="Index">Back to List</button>
+
+                            </div>
+
+                        </div>
+
+                </fieldset>
+
+            </form>
+
+            <script>function validateAndSave() {
+
+                    // Check if First Name and Last Name are empty
+                    var firstNameInput = document.querySelector('input[name="FirstName"]');
+                    var lastNameInput = document.querySelector('input[name="LastName"]');
+
+                    var firstName = firstNameInput.value;
+                    var lastName = lastNameInput.value;
+                    var regexPersian = new RegExp("^([\u0600-\u06FF]+\s?)+$");
+
+                    var NameIsPersian = regexPersian.test(firstName);
+                    var lastNameIsPersian = regexPersian.test(lastName);
+
+
+                    var accepted = true;
+                    clearErrorMessages();
+                    if (NameIsPersian === false) {
+                        accepted = false;
+                        displayErrorMessage(firstNameInput, 'لطفا از حروف الفبای فارسی استفاده شود ');
+                        return; // Stop further processing
+                    }
+
+                    if (lastNameIsPersian === false) {
+                        accepted = false;
+                        displayErrorMessage(lastNameInput, 'لطفا از حروف الفبای فارسی استفاده شود ');
+                        return; // Stop further processing
+                    }
+                    if (firstName === '') {
+                        accepted = false;
+                        displayErrorMessage(firstNameInput, 'نام نمیتواند خالی باشد');
+                        return; // Stop further processing
+                    }
+                    if (firstName.length < 3) {
+                        accepted = false;
+                        displayErrorMessage(firstNameInput, 'نام باید حداقل شامل سه حرف باشد ');
+                        return; // Stop further processing
+                    }
+                    if (lastName === '') {
+                        accepted = false;
+                        displayErrorMessage(lastNameInput, 'نام خانوادگی نمیتواند خالی باشد ');
+                        return; // Stop further processing
+                    }
+
+
+
+
+
+                    if (accepted) {
+                        document.querySelector('form').submit();
+                    }
+
+
+                }
+
+
+                function displayErrorMessage(element, errorMessage) {
+                    // Create and insert an error message element below the specified element
+                    var errorMessageElement = document.createElement('span');
+                    errorMessageElement.classList.add('text-danger');
+                    errorMessageElement.style.display = 'block'; // Make it a block element
+                    errorMessageElement.innerText = errorMessage;
+
+                    // Insert the error message below the specified element
+                    element.parentNode.appendChild(errorMessageElement);
+                }
+                function clearErrorMessages() {
+                    // Remove all existing error messages
+                    var existingErrorMessages = document.querySelectorAll('.text-danger');
+                    existingErrorMessages.forEach(function (element) {
+                        element.remove();
+                    });
+                }</script>
+
+</div><!-- /.container -->
+
+
+
+</body>
+</html>

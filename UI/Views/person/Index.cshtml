@@ -1,0 +1,88 @@
+@model IEnumerable<Domain.Person>
+
+@{
+    Layout = null;
+}
+    
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+    <title>Index</title>
+</head>
+<body>
+    <div class='contact-action'>
+        +
+    </div>
+    <div class="container">
+        <div class="black-overlay">
+
+            <div class="centered-title">PhoneBook</div>
+
+
+
+        </div>
+        <div class="white-background">
+
+            <table class="table-fill" dir="rtl">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </th>
+                        <th>
+                            phones
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @foreach (var p in item.Phones)
+                                {
+                                    @p.PhoneNumber
+                                    <br />
+                                }
+
+
+                            </td>
+                            <td dir="rtl">
+                                <a asp-action="Edit" asp-route-id="@item.Id" dir="rtl">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+
+
+            </table>
+            <div >
+                <a asp-action="Create"  class='contact-action'>+</a> 
+            </div>
+        </div>
+
+    </div>
+
+
+
+</body>
+</html>
+

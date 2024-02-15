@@ -1,16 +1,17 @@
 ﻿using System;
+using DAL.DataContext;
 using Domain;
 
 namespace DAL
 {
     public class UnitOfWork : IDisposable
     {
+        
         PhoneBookContext context = null;
-        public UnitOfWork(PhoneBookContext _contex)
+        public UnitOfWork()
         {
-            context = _contex;
+            context = new PhoneBookContext(PhoneBookContext.ops.dbOptions);
         }
-
 
         private GenericRepository<Person> PersonRepository;
         public GenericRepository<Person> personrepository
