@@ -14,31 +14,38 @@ namespace UI.Controllers
 {
     public class PhoneController : Controller
     {
-        private readonly PhoneBookContext _context;
+        
+
+   
+        private readonly BLL.PhoneRepository _phoneRepo;
+        private readonly BLL.PersonRepository _personRepo;
 
         public PhoneController(PhoneBookContext context)
         {
-            _context = context;
+            _phoneRepo = new BLL.PhoneRepository();
+            _personRepo = new BLL.PersonRepository();
+
+
         }
 
         // GET: Phone
         public async Task<IActionResult> Index()
         {
-            var phoneBookContext = _context.Phones.Include(p => p.Person);
-            return View(await phoneBookContext.ToListAsync());
+            var phones= _phoneRepo.GetAll() ;
+            return View(phones);
         }
 
         // GET: Phone/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Phones == null)
+            var phones = _phoneRepo.GetAll();
+            if (id == null || phones == null)
             {
                 return NotFound();
             }
 
-            var phone = await _context.Phones
-                .Include(p => p.Person)
-                .FirstOrDefaultAsync(m => m.Id == id);
+          
+            var phone = _phoneRepo.getPhoneByid((int)id);
             if (phone == null)
             {
                 return NotFound();
@@ -51,75 +58,64 @@ namespace UI.Controllers
         public IActionResult Create(int? id)
         {
 
-            //ViewData["PersonId"] = new SelectList(_context.Persons, "Id", "Id");
-            if(id != null)
+           if(id != null)
             {
                 ViewData["PersonId"] = id;
             }
             
-           // ViewData["PersonId"] = phone.PersonId;
+          
             return View();
         }
 
-        // POST: Phone/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhoneNumber,Type,PersonId")] Phone phone)
         {
-            if (ModelState.IsValid || true)
+            var phones = _phoneRepo.GetAll();
+            if (phone != null)
             {
                 if(phone.PhoneNumber == null)
                 {
                     return RedirectToAction(nameof(PhonesWithPersonId), new { id = phone.PersonId });
 
                 }
-                _context.Add(phone);
-                await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
+                _phoneRepo.InsertPhone(phone);
+             
                 return RedirectToAction(nameof(PhonesWithPersonId), new { id = phone.PersonId });
 
             }
             ViewData["PersonId"] = phone.PersonId;
-            // ViewData["PersonId"] = new SelectList(_context.Persons, "Id", "Id", phone.PersonId);
-            return View(phone);
+           return View(phone);
         }
 
         // GET: Phone/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
 
-          
-            if (id == null || _context.Phones == null)
+            var phones = _phoneRepo.GetAll();
+            if (id == null || phones == null)
             {
                 return NotFound();
             }
 
-            var phone = await _context.Phones.FindAsync(id);
+            var phone = _phoneRepo.getPhoneByid((int)id);
 
             if (phone == null)
             {
                 return NotFound();
             }
             ViewData["PersonId"] = phone.PersonId;
-            // ViewData["PersonId"] = new SelectList(_context.Persons, "Id", "Id", phone.PersonId);
+        
             return View(phone);
         }
 
-        // POST: Phone/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,PhoneNumber,Type,PersonId")] Phone phone)
         {
-            if (phone.PersonId != null)
-            {
-                var person = _context.Persons.Find(phone.PersonId);
-                var phones = person.Phones;
-            }
-            if (id == null || _context.Phones == null)
+           
+            if (id == null || phone.PersonId == null)
             {
                 return NotFound();
             }
@@ -132,8 +128,8 @@ namespace UI.Controllers
             {
                 try
                 {
-                    _context.Update(phone);
-                    await _context.SaveChangesAsync();
+                    _phoneRepo.EditPhone(phone);
+             
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -147,42 +143,41 @@ namespace UI.Controllers
                     }
                 }
                 return RedirectToAction(nameof(PhonesWithPersonId), new { id = phone.PersonId });
-                // return RedirectToAction(nameof(Index));
+             
             }
             ViewData["PersonId"] = id;
-            // ViewData["PersonId"] = new SelectList(_context.Persons, "Id", "Id", phone.PersonId);
             return View(phone);
         }
 
         // GET: Phone/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Phones == null)
+            var phones = _phoneRepo.GetAll();
+            if (id == null || phones == null)
             {
                 return NotFound();
             }
 
-            var phone = await _context.Phones
-                .Include(p => p.Person)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var phone = _phoneRepo.getPhoneByid((int) id);
             var pId = phone.PersonId;
             if (phone == null)
             {
                 return NotFound();
             }
           
-            if (_context.Phones == null)
+            if (_phoneRepo.GetAll() == null)
             {
                 return Problem("Entity set 'PhoneBookContext.Phones'  is null.");
             }
-            var phone2 = await _context.Phones.FindAsync(id);
-            // int personId = phone.PersonId;
-            if (phone2 != null)
+           
+    
+            if (phone != null)
             {
-                _context.Phones.Remove(phone2);
+                _phoneRepo.Delete(phone);
+              
             }
 
-            await _context.SaveChangesAsync();
+     
             //return View(phone);
             return RedirectToAction(nameof(PhonesWithPersonId), new { id = pId ,noadd = false});
 
@@ -193,27 +188,31 @@ namespace UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-           
-            if (_context.Phones == null)
+            var phones = _phoneRepo.GetAll();
+            if (phones == null)
             {
                 return Problem("Entity set 'PhoneBookContext.Phones'  is null.");
             }
-            var phone = await _context.Phones.FindAsync(id);
+            var phone = _phoneRepo.getPhoneByid(id);
            // int personId = phone.PersonId;
             if (phone != null)
             {
-                _context.Phones.Remove(phone);
+                _phoneRepo.Delete(phone);
+             
             }
-            
-            await _context.SaveChangesAsync();
-           // return RedirectToAction(nameof(PhonesWithPersonId), new { id = personId });
-
+     
            return RedirectToAction(nameof(Index));
         }
 
         private bool PhoneExists(int id)
         {
-          return (_context.Phones?.Any(e => e.Id == id)).GetValueOrDefault();
+
+            var phone = _phoneRepo.getPhoneByid(id);
+            if(phone != null)
+            {
+                return true;
+            }
+            return false;
         }
         // POST: Phone/PhonesWithPersonId
         [HttpGet]
@@ -221,20 +220,19 @@ namespace UI.Controllers
         public async Task<IActionResult> PhonesWithPersonId(int? id,bool? noAdd=true)
         {
             
-                var phoneBookContext = _context.Phones.Include(p => p.Person);
+                var phoneBooks = _phoneRepo.GetAll();
             
             if (id == null)
             {
                 return NotFound();
             }
-            var person = _context.Persons.Find(id); // Replace 'personId' with the actual ID
+            var person = _personRepo.getuserid((int)id); // Replace 'personId' with the actual ID
             if (person == null)
             {
                 return NotFound();
             }
             // Next, explicitly load the Phones navigation property
-            _context.Entry(person).Collection(p => p.Phones).Load();
-
+     
             var phones = person.Phones;
 
 

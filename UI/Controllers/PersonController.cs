@@ -10,14 +10,14 @@ namespace UI.Controllers
 {
     public class PersonController : Controller
     {
-        private readonly PhoneBookContext _context;
+        
         private readonly BLL.PersonRepository _personRepo;
-        private readonly BLL.PhoneRepository _phoneRepo;
-        public PersonController(PhoneBookContext context)
+      
+        public PersonController()
         {
           
             _personRepo = new BLL.PersonRepository();
-            _context = context;
+         
         }
 
         // GET: person

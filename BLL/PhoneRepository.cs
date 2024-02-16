@@ -16,22 +16,15 @@ namespace BLL
             db = new UnitOfWork();
         }
 
-        public List<Person> GetUser()
+        public List<Phone> GetAll()
         {
-            var q = db.personrepository.GetByList();
+            var q = db.phonerepository.GetByList();
             return q;
         }
 
-        public int InsertPhone()
+        public int InsertPhone(Phone p)
         {
-            Person b = new Person();
-            PersonRepository pr = new PersonRepository();
-            b = pr.GetUser().FirstOrDefault();
-            Phone p = new Phone();
-            p.Person = b;
-            p.PhoneNumber = "09137232814";
-            p.Type = PhoneType.Work;
-            p.PersonId = b.Id;
+            
             db.phonerepository.Insert(p);
          
             if (db.save() > 0)
@@ -45,7 +38,22 @@ namespace BLL
 
         }
 
+        public Phone getPhoneByid(int id)
+        {
 
+            return db.phonerepository.GetById(id); ;
+        }
+
+        public void EditPhone(Phone p)
+        {
+
+            db.phonerepository.UpdateById(p, true);
+        }
+
+        public void Delete(Phone p)
+        {
+            db.phonerepository.Delete(p);
+        }
     }
 }
 
