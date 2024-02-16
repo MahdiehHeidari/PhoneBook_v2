@@ -124,7 +124,7 @@ namespace UI.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid || true)
+            if (phone !=null)
             {
                 try
                 {
@@ -246,13 +246,10 @@ namespace UI.Controllers
              
                 return RedirectToAction("Index", "Person");
             }
-            if (ModelState.IsValid || true )
-            {
+           
                 ViewData["PersonId"] = id;
 
-                return View(phones);
-            }
-            
+                
             return View(phones);
         
     }
