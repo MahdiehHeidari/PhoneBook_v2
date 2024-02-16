@@ -11,6 +11,9 @@
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css">
+    <script src="~/js/site.js" type="text/javascript"></script>
+
+
     <title>Index</title>
 </head>
 <body>
@@ -66,14 +69,16 @@
                             <td dir="rtl">
                                 <a asp-action="Edit" asp-route-id="@item.Id" dir="rtl">Edit</a> |
                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                              
                             </td>
                         </tr>
                     }
                 </tbody>
-
+           
 
 
             </table>
+
             <div >
                 <a asp-action="Create"  class='contact-action'>+</a> 
             </div>

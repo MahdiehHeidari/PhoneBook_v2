@@ -21,31 +21,18 @@ namespace DAL
             this.dbset = context.Set<TEntity>();
         }
 
-        /// <summary>
-        /// بازگردادندن اطلاعات با شناسه مشخص
-        /// </summary>
-        /// <param name="id">کلید اصلی</param>
-        /// <returns></returns>
+    
         public virtual TEntity GetById(object id)
         {
             return dbset.Find(id);
         }
 
-        /// <summary>
-        /// بازگرداندن اطلاعات به صورت لیست
-        /// </summary>
-        /// <returns></returns>
+  
         public virtual List<TEntity> GetByList()
         {
             return dbset.ToList();
         }
 
-        /// <summary>
-        /// ذخیره اطلاعات با خروجی مشخص
-        /// </summary>
-        /// <param name="entity">مقدار ذخیره سازی</param>
-        /// <param name="_save"></param>
-        /// <returns></returns>
         public virtual TEntity Insert_RrturnTEntity(TEntity entity, bool _save = false)
         {
             dbset.Add(entity);
@@ -57,11 +44,6 @@ namespace DAL
             return entity;
         }
 
-
-        /// <summary>
-        /// ذخیره اطلاعات ورودی
-        /// </summary>
-        /// <param name="entity"></param>
         public virtual void Insert(TEntity entity)
         {
             dbset.Add(entity);
@@ -83,8 +65,9 @@ namespace DAL
 
         public virtual void Delete(TEntity entity)
         {
-            dbset.Attach(entity);
-            dbset.Remove(entity);
+         
+            context.Remove(entity);
+            context.SaveChanges();
         }
 
         public virtual TEntity Updete_Return(TEntity entity)
@@ -100,11 +83,7 @@ namespace DAL
             context.Entry(entity).State = EntityState.Modified;
         }
 
-        /// <summary>
-        /// حذف داده ها به صورت گروهی
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <param name="save"></param>
+ 
         public virtual void Delete(List<TEntity> entities, bool save = false)
         {
             dbset.RemoveRange(entities);
@@ -114,11 +93,7 @@ namespace DAL
             }
         }
 
-        /// <summary>
-        /// ویرایش گروهی
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <param name="save"></param>
+   
         public virtual void Update(List<TEntity> entities, bool save = false)
         {
             foreach (var item in entities)
@@ -141,11 +116,7 @@ namespace DAL
                 context.SaveChanges();
             }
         }
-        /// <summary>
-        /// وارد سازی گروهی داده ها
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <param name="save"></param>
+  
         public virtual void Insert(List<TEntity> entities, bool save = false)
         {
             dbset.AddRange(entities);

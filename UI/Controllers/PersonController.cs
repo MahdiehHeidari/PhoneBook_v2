@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace UI.Controllers
 {
-    public class personController : Controller
+    public class PersonController : Controller
     {
         private readonly PhoneBookContext _context;
         private readonly BLL.PersonRepository _personRepo;
         private readonly BLL.PhoneRepository _phoneRepo;
-        public personController(PhoneBookContext context)
+        public PersonController(PhoneBookContext context)
         {
           
             _personRepo = new BLL.PersonRepository();
@@ -28,21 +28,20 @@ namespace UI.Controllers
             var personWithPhones = persons;
 
             return personWithPhones != null ?
-                          View(await _context.Persons.ToListAsync()) :
+                          View(persons) :
                           Problem("Entity set 'PhoneBookContext.Persons'  is null."); ;
         }
 
         // GET: person/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Persons == null)
+            var persons = _personRepo.GetUser();
+            if (id == null || persons == null)
             {
                 return NotFound();
             }
             var person = _personRepo.getuserid((int)id);
-            // var person = await _personRepo.GetUser();
-            //var person = await _context.Persons
-                //.FirstOrDefaultAsync(m => m.Id == id);
+          
             if (person == null)
             {
                 return NotFound();
@@ -92,7 +91,7 @@ namespace UI.Controllers
                 //   person.Phones = person.Phones.Select(phone => new Phone { PhoneNumber = phone.PhoneNumber }).ToList();
 
 
- _personRepo.InsertPerson(person);
+            _personRepo.InsertPerson(person);
 
 
 
@@ -138,8 +137,7 @@ namespace UI.Controllers
                 try
                 {
                     _personRepo.EditUser(person);
-                    //_context.Update(person);
-                  //  await _context.SaveChangesAsync();
+                
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -160,13 +158,13 @@ namespace UI.Controllers
         // GET: person/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Persons == null)
+            if (id == null || _personRepo.GetUser() == null)
             {
                 return NotFound();
             }
 
-            var person = await _context.Persons
-                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var person = _personRepo.getuserid((int)id);
             if (person == null)
             {
                 return NotFound();
@@ -180,23 +178,25 @@ namespace UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Persons == null)
+            if (_personRepo.GetUser() == null)
             {
                 return Problem("Entity set 'PhoneBookContext.Persons'  is null.");
             }
-            var person = await _context.Persons.FindAsync(id);
+           
+            var person = _personRepo.getuserid((int)id);
             if (person != null)
             {
-                _context.Persons.Remove(person);
+                _personRepo.DeleteById(person);
+               
             }
             
-            await _context.SaveChangesAsync();
+           
             return RedirectToAction(nameof(Index));
         }
 
         private bool PersonExists(int id)
         {
-          return (_context.Persons?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_personRepo.GetUser()?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
 

@@ -49,7 +49,10 @@ namespace BLL
           db.personrepository.UpdateById(p,true);
         }
         
-
+         public void DeleteById(Person p )
+        {
+            db.personrepository.Delete(p);
+        }
     }
 }
 
